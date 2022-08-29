@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="65dp"
+    android:orientation="horizontal"
+    android:layout_marginTop="5dp"
+    android:gravity="center">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/item_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/color_1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@color/purple_500" />
+
+        <TextView
+            android:id="@+id/color_code_1"
+            android:layout_width="50dp"
+            android:layout_height="15dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="#ABCDEF"
+            android:textSize="10sp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/item_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/color_2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@color/purple_500" />
+
+        <TextView
+            android:id="@+id/color_code_2"
+            android:layout_width="50dp"
+            android:layout_height="15dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="#ABCDEF"
+            android:textSize="10sp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/item_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/color_3"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@color/purple_500" />
+
+        <TextView
+            android:id="@+id/color_code_3"
+            android:layout_width="50dp"
+            android:layout_height="15dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="#ABCDEF"
+            android:textSize="10sp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/item_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/color_4"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@color/purple_500" />
+
+        <TextView
+            android:id="@+id/color_code_4"
+            android:layout_width="50dp"
+            android:layout_height="15dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="#ABCDEF"
+            android:textSize="10sp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/item_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/color_5"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@color/purple_500" />
+
+        <TextView
+            android:id="@+id/color_code_5"
+            android:layout_width="50dp"
+            android:layout_height="15dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="#ABCDEF"
+            android:textSize="10sp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>
