@@ -20,14 +20,13 @@ class PaletteListViewModel(
     val palettes = MutableLiveData<Resource<List<Palette>>>()
 
 
-
     init {
         getPalettes()
         getPalettes()
     }
 
     fun getPalettes() = viewModelScope.launch {
-        fetchPalettes(5)
+        fetchPalettes(20)
     }
 
 
@@ -37,10 +36,10 @@ class PaletteListViewModel(
         try {
             if (hasInternetConnection(getApplication<App>())) {
                 repeat(n) {
-                    val response = repository.getPictures()
+                    val response = repository.getPalettes()
                     paletteList.add(handleResponse(response).data!!)
                 }
-                    palettes.postValue(Resource.Success(paletteList))
+                palettes.postValue(Resource.Success(paletteList))
 
             } else {
                 palettes.postValue(Resource.Error(getApplication<App>().getString(R.string.no_internet_connection)))

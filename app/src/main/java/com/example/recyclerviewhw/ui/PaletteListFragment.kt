@@ -1,6 +1,7 @@
 package com.example.recyclerviewhw.ui
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -25,24 +26,25 @@ class PaletteListFragment : Fragment() {
     private lateinit var binding: FragmentPaletteListBinding
     private lateinit var adapter: PalettesAdapter
     private lateinit var viewModel: PaletteListViewModel
-    private var loading=false
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentPaletteListBinding.inflate(layoutInflater, container, false)
-        viewModel = ViewModelProvider(this, ViewModelFactory(requireActivity().application, Repository())).get(
-            PaletteListViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(requireActivity().application, Repository())
+        ).get(
+            PaletteListViewModel::class.java
+        )
         setupViews()
         setupObservers()
 
-        binding.btn.setOnClickListener({
-            viewModel.getPalettes()
-        })
-
         return binding.root
     }
+
 
 
 
@@ -59,64 +61,49 @@ class PaletteListFragment : Fragment() {
             )
         )
 
+
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if (dy > 0) {
                     // Scrolling up
-                    if (layoutManager.findLastCompletelyVisibleItemPosition()>=adapter.differ.currentList.size-3)
-                        if (!loading) {
-                            Log.e("lol",layoutManager.findLastCompletelyVisibleItemPosition().toString())
-                            loading=true
+                    if (layoutManager.findLastCompletelyVisibleItemPosition() >= adapter.differ.currentList.size - 25)
+                        if (!adapter.loading) {
                             viewModel.getPalettes()
                         }
-                } else {
-                    // Scrolling down
-
-                }
-            }
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
-                    // Do something
-                } else if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    // Do something
-                } else {
-                    // Do something
                 }
             }
         })
     }
 
 
-
     private fun setupObservers() {
-            viewModel.palettes.observe(viewLifecycleOwner) { response ->
-                when (response) {
-                    is Resource.Success -> {
-                       // hideProgressBar()
-                        response.data?.let { picsResponse ->
-                            adapter.differ.submitList(picsResponse)
-                           // binding.recyclerView.adapter = adapter
-                            adapter.notifyDataSetChanged()
-                            loading=false
-                        }
-                    }
-
-                    is Resource.Error -> {
-                      //  hideProgressBar()
-                        response.message?.let { message ->
-                            Toast.makeText(requireContext(),message,Toast.LENGTH_SHORT)
-                        }
-
-                    }
-
-                    is Resource.Loading -> {
-                     //   showProgressBar()
+        viewModel.palettes.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is Resource.Success -> {
+                    response.data?.let { picsResponse ->
+                        if (adapter.loading) adapter.removeLoadingView()
+                        val positionStart = adapter.differ.currentList.size + 1
+                        adapter.differ.submitList(picsResponse)
+                        adapter.notifyItemRangeInserted(
+                            positionStart,
+                            adapter.differ.currentList.size
+                        )
                     }
                 }
+
+                is Resource.Error -> {
+                    response.message?.let { message ->
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
+                    }
+
+                }
+
+                is Resource.Loading -> {
+                    adapter.addLoadingView()
+                }
             }
+        }
 
     }
 
