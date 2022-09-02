@@ -13,10 +13,14 @@ import com.example.recyclerviewhw.databinding.FragmentPaletteListBinding
 import android.widget.AbsListView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import androidx.recyclerview.widget.ItemTouchHelper
 
 import androidx.recyclerview.widget.RecyclerView
+import com.example.recyclerviewhw.R
 import com.example.recyclerviewhw.model.*
 import com.example.recyclerviewhw.repository.Repository
+import com.example.recyclerviewhw.viewmodel.FavoritesViewModel
 import com.example.recyclerviewhw.viewmodel.PaletteListViewModel
 import com.example.recyclerviewhw.viewmodel.ViewModelFactory
 
@@ -35,10 +39,12 @@ class PaletteListFragment : Fragment() {
         binding = FragmentPaletteListBinding.inflate(layoutInflater, container, false)
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(requireActivity().application, Repository())
+            ViewModelFactory(requireActivity().application, Repository)
         ).get(
             PaletteListViewModel::class.java
         )
+
+
         setupViews()
         setupObservers()
 
@@ -46,10 +52,8 @@ class PaletteListFragment : Fragment() {
     }
 
 
-
-
     private fun setupViews() {
-        adapter = PalettesAdapter()
+        adapter = PalettesAdapter(viewModel)
         val layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.layoutManager = layoutManager
 
@@ -85,10 +89,6 @@ class PaletteListFragment : Fragment() {
                         if (adapter.loading) adapter.removeLoadingView()
                         val positionStart = adapter.differ.currentList.size + 1
                         adapter.differ.submitList(picsResponse)
-                        adapter.notifyItemRangeInserted(
-                            positionStart,
-                            adapter.differ.currentList.size
-                        )
                     }
                 }
 
@@ -105,17 +105,35 @@ class PaletteListFragment : Fragment() {
             }
         }
 
-    }
+        binding.btn.setOnClickListener({
+            Navigation.findNavController(binding.root)
+                .navigate(R.id.action_paletteListFragment_to_favoritesFragment)
+        });
 
 
-/*
-    private lateinit var binding: FragmentPaletteListBinding
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentPaletteListBinding.inflate(layoutInflater, container, false)
-        return binding.root
+        val myCallback = object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT
+        ) {
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean = false
+
+            override fun onSwiped(
+                viewHolder: RecyclerView.ViewHolder,
+                direction: Int
+            ) {
+                adapter.deleteItem(viewHolder.adapterPosition)
+            }
+
+        }
+        val myHelper = ItemTouchHelper(myCallback)
+        myHelper.attachToRecyclerView(binding.recyclerView)
+
+
     }
-*/
+
 }

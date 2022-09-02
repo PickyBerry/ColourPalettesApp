@@ -15,6 +15,21 @@
         android:id="@+id/paletteListFragment"
         android:name="com.example.recyclerviewhw.ui.PaletteListFragment"
         android:label="fragment_palette_list"
-        tools:layout="@layout/fragment_palette_list" />
+        tools:layout="@layout/fragment_palette_list" >
+        <action
+            android:id="@+id/action_paletteListFragment_to_favoritesFragment"
+            app:destination="@id/favoritesFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:launchSingleTop="false"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.example.recyclerviewhw.ui.FavoritesFragment"
+        android:label="fragment_favorites"
+        tools:layout="@layout/fragment_favorites" />
 
 </navigation>

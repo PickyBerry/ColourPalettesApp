@@ -1,6 +1,7 @@
 package com.example.recyclerviewhw.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.recyclerviewhw.R
 import com.example.recyclerviewhw.app.App
@@ -16,19 +17,21 @@ class PaletteListViewModel(
     private val repository: Repository
 ) : AndroidViewModel(app) {
 
-    private val paletteList = mutableListOf<Palette>()
-    val palettes = MutableLiveData<Resource<List<Palette>>>()
+    private val paletteList = mutableListOf<PaletteItem>()
+    val palettes = MutableLiveData<Resource<List<PaletteItem>>>()
 
 
     init {
         getPalettes()
-        getPalettes()
+      //  getPalettes()
     }
 
     fun getPalettes() = viewModelScope.launch {
         fetchPalettes(20)
     }
 
+    fun addFavorite(paletteItem: PaletteItem) = repository.addFavorite(paletteItem)
+    fun removeFavorite(paletteItem: PaletteItem) = repository.removeFavorite(paletteItem)
 
     private suspend fun fetchPalettes(n: Int) {
         palettes.postValue(Resource.Loading())
@@ -37,7 +40,7 @@ class PaletteListViewModel(
             if (hasInternetConnection(getApplication<App>())) {
                 repeat(n) {
                     val response = repository.getPalettes()
-                    paletteList.add(handleResponse(response).data!!)
+                    paletteList.add(PaletteItem(handleResponse(response).data!!,false))
                 }
                 palettes.postValue(Resource.Success(paletteList))
 

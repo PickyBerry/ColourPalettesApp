@@ -15,6 +15,9 @@ class ViewModelFactory(
         if (modelClass.isAssignableFrom(PaletteListViewModel::class.java)) {
             return PaletteListViewModel(app, repository) as T
         }
+        else if (modelClass.isAssignableFrom(FavoritesViewModel::class.java)) {
+            return FavoritesViewModel(app, repository) as T
+        }
         throw IllegalArgumentException("Unknown class name")
     }
 

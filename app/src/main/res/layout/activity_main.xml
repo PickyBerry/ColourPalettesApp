@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
+    <!--
+<androidx.viewpager.widget.ViewPager
+    android:id="@+id/viewpager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    />
+        -->
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
@@ -14,4 +21,5 @@
         android:layout_height="match_parent"
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph" />
+
 </FrameLayout>
