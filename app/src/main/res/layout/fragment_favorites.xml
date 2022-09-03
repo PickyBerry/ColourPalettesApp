@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.PaletteListFragment"
+    tools:context=".ui.FavoritesFragment"
     android:orientation="vertical">
-
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@drawable/gradient_purple"
+        android:background="@drawable/gradient_orange"
         android:textAlignment="center">
 
         <TextView
@@ -21,22 +21,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/kanit_bold"
-            android:text="COLOR PALETTE APP"
+            android:text="FAVORITES"
             android:textColor="@color/white"
-            android:textSize="30dp" />
+            android:textSize="30sp" />
     </androidx.appcompat.widget.Toolbar>
-
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="150dp"
-        android:layout_height="0dp"
-        android:layout_weight="15"
-        android:layout_gravity="center_horizontal"
-        android:indeterminate="true"
-        android:indeterminateTintMode="src_atop"
-        android:indeterminateTint="@color/purple"
-        android:visibility="visible"/>
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -44,18 +32,29 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="15"
+
+        />
+
+    <TextView
+        android:id="@+id/empty_list_notification"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="15"
+        android:layout_gravity="center"
+        android:fontFamily="@font/kanit_bold"
+        android:text="There's nothing here yet!"
+        android:gravity="center"
         android:visibility="gone"
-         />
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/btn"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@drawable/gradient_purple"
+        android:background="@drawable/gradient_orange"
         android:layout_weight="1"
-        android:text="GO TO FAVORITES"
+        android:text="RETURN"
         android:textColor="@color/white"
         android:textSize="15dp"
-/>
-
+        />
 </androidx.appcompat.widget.LinearLayoutCompat>

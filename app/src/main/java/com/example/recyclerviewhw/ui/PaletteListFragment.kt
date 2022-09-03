@@ -30,7 +30,7 @@ class PaletteListFragment : Fragment() {
     private lateinit var binding: FragmentPaletteListBinding
     private lateinit var adapter: PalettesAdapter
     private lateinit var viewModel: PaletteListViewModel
-
+    private var loadedList = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +44,7 @@ class PaletteListFragment : Fragment() {
             PaletteListViewModel::class.java
         )
 
-
+        loadedList = false
         setupViews()
         setupObservers()
 
@@ -87,8 +87,12 @@ class PaletteListFragment : Fragment() {
                 is Resource.Success -> {
                     response.data?.let { picsResponse ->
                         if (adapter.loading) adapter.removeLoadingView()
-                        val positionStart = adapter.differ.currentList.size + 1
                         adapter.differ.submitList(picsResponse)
+                        if (!loadedList) {
+                            binding.progressBar.visibility = View.GONE
+                            binding.recyclerView.visibility = View.VISIBLE
+                            loadedList = true
+                        }
                     }
                 }
 
@@ -105,10 +109,10 @@ class PaletteListFragment : Fragment() {
             }
         }
 
-        binding.btn.setOnClickListener({
+        binding.btn.setOnClickListener {
             Navigation.findNavController(binding.root)
                 .navigate(R.id.action_paletteListFragment_to_favoritesFragment)
-        });
+        }
 
 
         val myCallback = object : ItemTouchHelper.SimpleCallback(

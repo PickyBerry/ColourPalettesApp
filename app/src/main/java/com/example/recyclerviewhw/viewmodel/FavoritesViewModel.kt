@@ -23,12 +23,15 @@ class FavoritesViewModel(
         getFavorites()
     }
 
-    fun getFavorites() {
+    private fun getFavorites() {
         _favorites.postValue(repository.getFavorites())
     }
 
 
-    fun removeFavorite(paletteItem: PaletteItem) = repository.removeFavorite(paletteItem)
+    fun removeFavorite(paletteItem: PaletteItem) {
+        repository.removeFavorite(paletteItem)
+        getFavorites()
+    }
 
 
 }
