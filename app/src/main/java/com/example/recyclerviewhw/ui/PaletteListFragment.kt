@@ -13,6 +13,7 @@ import com.example.recyclerviewhw.databinding.FragmentPaletteListBinding
 import android.widget.AbsListView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 
@@ -23,6 +24,8 @@ import com.example.recyclerviewhw.repository.Repository
 import com.example.recyclerviewhw.viewmodel.FavoritesViewModel
 import com.example.recyclerviewhw.viewmodel.PaletteListViewModel
 import com.example.recyclerviewhw.viewmodel.ViewModelFactory
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 class PaletteListFragment : Fragment() {
@@ -47,7 +50,7 @@ class PaletteListFragment : Fragment() {
         loadedList = false
         setupViews()
         setupObservers()
-
+        getPalettes()
         return binding.root
     }
 
@@ -73,7 +76,7 @@ class PaletteListFragment : Fragment() {
                     // Scrolling up
                     if (layoutManager.findLastCompletelyVisibleItemPosition() >= adapter.differ.currentList.size - 25)
                         if (!adapter.loading) {
-                            viewModel.getPalettes()
+                            getPalettes()
                         }
                 }
             }
@@ -82,32 +85,6 @@ class PaletteListFragment : Fragment() {
 
 
     private fun setupObservers() {
-        viewModel.palettes.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is Resource.Success -> {
-                    response.data?.let { picsResponse ->
-                        if (adapter.loading) adapter.removeLoadingView()
-                        adapter.differ.submitList(picsResponse)
-                        if (!loadedList) {
-                            binding.progressBar.visibility = View.GONE
-                            binding.recyclerView.visibility = View.VISIBLE
-                            loadedList = true
-                        }
-                    }
-                }
-
-                is Resource.Error -> {
-                    response.message?.let { message ->
-                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
-                    }
-
-                }
-
-                is Resource.Loading -> {
-                    adapter.addLoadingView()
-                }
-            }
-        }
 
         binding.btn.setOnClickListener {
             Navigation.findNavController(binding.root)
@@ -138,6 +115,44 @@ class PaletteListFragment : Fragment() {
         myHelper.attachToRecyclerView(binding.recyclerView)
 
 
+    }
+
+    private fun getPalettes(){
+        lifecycleScope.launch {
+            if (viewModel.getCurrentList().size == 0) {
+                binding.progressBar.visibility = View.VISIBLE
+            } else {
+                adapter.differ.submitList(viewModel.getCurrentList())
+                binding.recyclerView.visibility = View.VISIBLE
+            }
+            viewModel.paletteFlow(20).collectLatest { response ->
+                when (response) {
+                    is Resource.Success -> {
+                        response.data?.let { picsResponse ->
+                            if (adapter.loading) adapter.removeLoadingView()
+                            adapter.differ.submitList(picsResponse)
+
+                            if (!loadedList) {
+                                binding.progressBar.visibility = View.GONE
+                                binding.recyclerView.visibility = View.VISIBLE
+                                loadedList = true
+                            }
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        response.message?.let { message ->
+                            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
+                        }
+
+                    }
+
+                    is Resource.Loading -> {
+                        adapter.addLoadingView()
+                    }
+                }
+            }
+        }
     }
 
 }

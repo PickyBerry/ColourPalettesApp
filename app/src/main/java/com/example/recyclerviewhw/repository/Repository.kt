@@ -4,6 +4,8 @@ import com.example.recyclerviewhw.model.MyCall
 import com.example.recyclerviewhw.model.Palette
 import com.example.recyclerviewhw.model.PaletteItem
 import com.example.recyclerviewhw.network.RetrofitInstance
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 object Repository {
 
@@ -14,6 +16,7 @@ object Repository {
     fun addFavorite(paletteItem: PaletteItem){
         favorites.add(paletteItem)
     }
+
 
     fun getFavorites()=favorites
 

@@ -36,7 +36,7 @@
         android:indeterminate="true"
         android:indeterminateTintMode="src_atop"
         android:indeterminateTint="@color/purple"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
 
     <androidx.recyclerview.widget.RecyclerView
