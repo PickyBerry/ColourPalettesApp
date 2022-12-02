@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recyclerviewhw.databinding.FragmentPaletteListBinding
 import android.widget.AbsListView
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
@@ -23,16 +24,18 @@ import com.example.recyclerviewhw.model.*
 import com.example.recyclerviewhw.repository.Repository
 import com.example.recyclerviewhw.viewmodel.FavoritesViewModel
 import com.example.recyclerviewhw.viewmodel.PaletteListViewModel
-import com.example.recyclerviewhw.viewmodel.ViewModelFactory
+
+import dagger.hilt.EntryPoint
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class PaletteListFragment : Fragment() {
 
     private lateinit var binding: FragmentPaletteListBinding
     private lateinit var adapter: PalettesAdapter
-    private lateinit var viewModel: PaletteListViewModel
+    private val viewModel: PaletteListViewModel by viewModels()
     private var loadedList = false
 
     override fun onCreateView(
@@ -40,12 +43,6 @@ class PaletteListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentPaletteListBinding.inflate(layoutInflater, container, false)
-        viewModel = ViewModelProvider(
-            this,
-            ViewModelFactory(requireActivity().application, Repository)
-        ).get(
-            PaletteListViewModel::class.java
-        )
 
         loadedList = false
         setupViews()
@@ -117,7 +114,7 @@ class PaletteListFragment : Fragment() {
 
     }
 
-    private fun getPalettes(){
+    private fun getPalettes() {
         lifecycleScope.launch {
             if (viewModel.getCurrentList().size == 0) {
                 binding.progressBar.visibility = View.VISIBLE

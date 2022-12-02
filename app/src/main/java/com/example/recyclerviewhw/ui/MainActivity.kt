@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.example.recyclerviewhw.R
 import com.example.recyclerviewhw.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -15,8 +17,5 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-       // val viewPager = findViewById<ViewPager>(R.id.viewpager)
-       // val adapter = SimpleFragmentPagerAdapter(supportFragmentManager)
-       // viewPager.adapter = adapter
     }
 }

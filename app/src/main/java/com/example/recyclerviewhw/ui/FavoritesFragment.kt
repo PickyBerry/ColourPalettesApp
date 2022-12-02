@@ -5,20 +5,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recyclerviewhw.databinding.FragmentFavoritesBinding
 import com.example.recyclerviewhw.repository.Repository
 import com.example.recyclerviewhw.viewmodel.FavoritesViewModel
-import com.example.recyclerviewhw.viewmodel.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+//import com.example.recyclerviewhw.viewmodel.ViewModelFactory
 
+@AndroidEntryPoint
 class FavoritesFragment : Fragment() {
 
     private lateinit var binding: FragmentFavoritesBinding
     private lateinit var adapter: PalettesAdapter
-    private lateinit var viewModel: FavoritesViewModel
+    private val viewModel: FavoritesViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,12 +29,6 @@ class FavoritesFragment : Fragment() {
     ): View? {
 
         binding = FragmentFavoritesBinding.inflate(layoutInflater, container, false)
-        viewModel = ViewModelProvider(
-            this,
-            ViewModelFactory(requireActivity().application, Repository)
-        ).get(
-            FavoritesViewModel::class.java
-        )
         setupViews()
         setupObservers()
 
@@ -57,17 +54,16 @@ class FavoritesFragment : Fragment() {
         viewModel.favorites.observe(viewLifecycleOwner) { list ->
             if (list.isEmpty()) {
                 binding.emptyListNotification.visibility = View.VISIBLE
-                binding.recyclerView.visibility=View.GONE
-            }
-            else{
+                binding.recyclerView.visibility = View.GONE
+            } else {
                 binding.emptyListNotification.visibility = View.GONE
-                binding.recyclerView.visibility=View.VISIBLE
+                binding.recyclerView.visibility = View.VISIBLE
             }
             adapter.differ.submitList(list)
             adapter.notifyDataSetChanged()
         }
 
-        binding.btn.setOnClickListener{
+        binding.btn.setOnClickListener {
             requireActivity().onBackPressed()
         }
     }

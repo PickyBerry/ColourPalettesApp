@@ -8,9 +8,11 @@ import androidx.lifecycle.MutableLiveData
 import com.example.recyclerviewhw.model.Palette
 import com.example.recyclerviewhw.model.PaletteItem
 import com.example.recyclerviewhw.repository.Repository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-
-class FavoritesViewModel(
+@HiltViewModel
+class FavoritesViewModel @Inject constructor(
     app: Application,
     private val repository: Repository
 ) : AndroidViewModel(app) {

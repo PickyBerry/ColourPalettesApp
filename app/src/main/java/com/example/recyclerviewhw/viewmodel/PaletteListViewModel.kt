@@ -7,16 +7,18 @@ import com.example.recyclerviewhw.R
 import com.example.recyclerviewhw.app.App
 import com.example.recyclerviewhw.model.*
 import com.example.recyclerviewhw.network.InternetValidation.hasInternetConnection
-import com.example.recyclerviewhw.network.RetrofitInstance
 import com.example.recyclerviewhw.repository.Repository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.IOException
+import javax.inject.Inject
 
-class PaletteListViewModel(
+@HiltViewModel
+class PaletteListViewModel @Inject constructor(
     app: Application,
     private val repository: Repository
 ) : AndroidViewModel(app) {
