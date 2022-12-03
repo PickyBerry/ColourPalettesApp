@@ -1,5 +1,6 @@
-package com.example.recyclerviewhw.model
+package com.example.recyclerviewhw.data
 
+//Abstraction resource class for managing  the result from api
 sealed class Resource<T>(
     val data: T? = null,
     val message: String? = null

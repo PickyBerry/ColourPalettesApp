@@ -1,22 +1,22 @@
 package com.example.recyclerviewhw.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.recyclerviewhw.R
 import com.example.recyclerviewhw.app.App
-import com.example.recyclerviewhw.model.*
+import com.example.recyclerviewhw.data.*
 import com.example.recyclerviewhw.network.InternetValidation.hasInternetConnection
-import com.example.recyclerviewhw.repository.Repository
+import com.example.recyclerviewhw.network.PaletteResponse
+import com.example.recyclerviewhw.data.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.IOException
 import javax.inject.Inject
 
+
+//Viewmodel for main screen with palettes list
 @HiltViewModel
 class PaletteListViewModel @Inject constructor(
     app: Application,
@@ -29,6 +29,7 @@ class PaletteListViewModel @Inject constructor(
     fun removeFavorite(paletteItem: PaletteItem) = repository.removeFavorite(paletteItem)
 
 
+    //Emitting palettes as flow
     fun paletteFlow(n: Int): Flow<Resource<MutableList<PaletteItem>>> {
         return flow {
             emit(Resource.Loading())
@@ -37,7 +38,7 @@ class PaletteListViewModel @Inject constructor(
                     repeat(n) {
                         paletteList.add(
                             PaletteItem(
-                                handleResponse(repository.getPalettes()).data!!,
+                                handleResponse(repository.getPalettes()).data!!.toPalette(),
                                 false
                             )
                         )
@@ -70,15 +71,15 @@ class PaletteListViewModel @Inject constructor(
 
     fun getCurrentList() = paletteList
 
-
-private fun handleResponse(response: Response<Palette>): Resource<Palette> {
-    if (response.isSuccessful) {
-        response.body()?.let { resultResponse ->
-            return Resource.Success(resultResponse)
+    //Handling the response from api
+    private fun handleResponse(response: Response<PaletteResponse>): Resource<PaletteResponse> {
+        if (response.isSuccessful) {
+            response.body()?.let { resultResponse ->
+                return Resource.Success(resultResponse)
+            }
         }
+        return Resource.Error(response.message())
     }
-    return Resource.Error(response.message())
-}
 
 
 }

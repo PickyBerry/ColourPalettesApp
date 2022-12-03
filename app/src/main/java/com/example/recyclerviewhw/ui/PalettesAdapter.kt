@@ -1,6 +1,5 @@
 package com.example.recyclerviewhw.ui
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,15 +10,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerviewhw.R
 import com.example.recyclerviewhw.databinding.ItemPaletteBinding
-import com.example.recyclerviewhw.model.Palette
-import com.example.recyclerviewhw.model.PaletteItem
+import com.example.recyclerviewhw.data.Palette
+import com.example.recyclerviewhw.data.PaletteItem
 import com.example.recyclerviewhw.viewmodel.FavoritesViewModel
 import com.example.recyclerviewhw.viewmodel.PaletteListViewModel
 
 
+//RecyclerView adapter for showing color palettes
 class PalettesAdapter(val viewModel: AndroidViewModel) :
     RecyclerView.Adapter<PalettesAdapter.PalettesViewHolder>() {
 
+    var loading = false
+
+    //Using DiffUtils
     private val differCallback = object : DiffUtil.ItemCallback<PaletteItem>() {
         override fun areItemsTheSame(oldItem: PaletteItem, newItem: PaletteItem): Boolean {
             return oldItem == newItem
@@ -29,9 +32,7 @@ class PalettesAdapter(val viewModel: AndroidViewModel) :
             return oldItem == newItem
         }
     }
-
     val differ = AsyncListDiffer(this, differCallback)
-    var loading = false
 
 
     override fun onCreateViewHolder(
@@ -43,31 +44,39 @@ class PalettesAdapter(val viewModel: AndroidViewModel) :
         return PalettesViewHolder(binding)
     }
 
+    //On binding of the view holder,
     override fun onBindViewHolder(holder: PalettesViewHolder, position: Int) {
-        val paletteItem=differ.currentList[position]
+        val paletteItem = differ.currentList[position]
         val palette = paletteItem.palette
         val binding = holder.binding
 
         holder.itemView.apply {
             if (palette.colors == null) showProgressbar(holder)
             else {
+
+                //Setting up the five color rectangles
                 hideProgressbar(holder)
-                setUpItem(palette.colors!![0], binding.color1, binding.colorCode1)
-                setUpItem(palette.colors[1], binding.color2, binding.colorCode2)
-                setUpItem(palette.colors[2], binding.color3, binding.colorCode3)
-                setUpItem(palette.colors[3], binding.color4, binding.colorCode4)
-                setUpItem(palette.colors[4], binding.color5, binding.colorCode5)
+                setUpItem(palette[0], binding.color1, binding.colorCode1)
+                setUpItem(palette[1], binding.color2, binding.colorCode2)
+                setUpItem(palette[2], binding.color3, binding.colorCode3)
+                setUpItem(palette[3], binding.color4, binding.colorCode4)
+                setUpItem(palette[4], binding.color5, binding.colorCode5)
+
+
+                //Setting up the "add to favorites" default background
                 if (paletteItem.favorite) binding.btnFavorite.setBackgroundResource(R.drawable.added_to_favorites)
                 else binding.btnFavorite.setBackgroundResource(R.drawable.add_to_favorites)
+
+
+                //Setting up the "add to favorites" button logic
                 binding.btnFavorite.setOnClickListener {
                     paletteItem.favorite = !paletteItem.favorite
                     if (paletteItem.favorite) {
                         if (viewModel is PaletteListViewModel) viewModel.addFavorite(paletteItem)
                         binding.btnFavorite.setBackgroundResource(R.drawable.added_to_favorites)
-                    }
-                    else {
+                    } else {
                         if (viewModel is PaletteListViewModel) viewModel.removeFavorite(paletteItem)
-                        else if (viewModel is FavoritesViewModel){
+                        else if (viewModel is FavoritesViewModel) {
                             viewModel.removeFavorite(paletteItem)
                             notifyItemRemoved(position)
                         }
@@ -79,6 +88,15 @@ class PalettesAdapter(val viewModel: AndroidViewModel) :
     }
 
 
+    //Showing the little progress bar at the end of the list
+    fun addLoadingView() {
+        loading = true
+        val list = differ.currentList.toMutableList()
+        list.add(PaletteItem(Palette(null), false))
+        differ.submitList(list)
+    }
+
+    //Removing the little progress bar at the end of the list
     fun removeLoadingView() {
         loading = false
         val list = differ.currentList.toMutableList()
@@ -86,54 +104,44 @@ class PalettesAdapter(val viewModel: AndroidViewModel) :
         differ.submitList(list)
     }
 
-    fun addLoadingView() {
-        loading = true
-        val list = differ.currentList.toMutableList()
-        list.add(PaletteItem(Palette(null),false))
-        differ.submitList(list)
-    }
-
+    //Removing palette from list
     fun deleteItem(position: Int) {
         val list = differ.currentList.toMutableList()
         list.removeAt(position)
         differ.submitList(list)
     }
 
+
     override fun getItemCount() = differ.currentList.size
 
-    private inline fun showProgressbar(holder: PalettesViewHolder){
-        val binding=holder.binding
+    //Showing the big progress bar before nothing is loaded
+    private inline fun showProgressbar(holder: PalettesViewHolder) {
+        val binding = holder.binding
         binding.item1.visibility = View.GONE
         binding.item2.visibility = View.GONE
         binding.item3.visibility = View.GONE
         binding.item4.visibility = View.GONE
         binding.item5.visibility = View.GONE
-        binding.btnFavorite.visibility=View.GONE
+        binding.btnFavorite.visibility = View.GONE
         binding.progressBar.visibility = View.VISIBLE
     }
 
+    //Hiding the big progress bar after the first palettes loaded
     private inline fun hideProgressbar(holder: PalettesViewHolder) {
-        val binding=holder.binding
+        val binding = holder.binding
         binding.item1.visibility = View.VISIBLE
         binding.item2.visibility = View.VISIBLE
         binding.item3.visibility = View.VISIBLE
         binding.item4.visibility = View.VISIBLE
         binding.item5.visibility = View.VISIBLE
-        binding.btnFavorite.visibility=View.VISIBLE
+        binding.btnFavorite.visibility = View.VISIBLE
         binding.progressBar.visibility = View.GONE
     }
 
-    private inline fun setUpItem(palette: Array<Int>, colorView: View, tvColor: TextView) {
-        val color = getIntFromColor(palette[0], palette[1], palette[2])
+    //Display each color as a rectangle with its color code
+    private fun setUpItem(color: Int, colorView: View, tvColor: TextView) {
         colorView.setBackgroundColor(color)
         tvColor.text = "#".plus(Integer.toHexString(color).substring(startIndex = 2).uppercase())
-    }
-
-    private fun getIntFromColor(red: Int, green: Int, blue: Int): Int {
-        val red = red shl 16 and 0x00FF0000 //Shift red 16-bits and mask out other stuff
-        val green = green shl 8 and 0x0000FF00 //Shift Green 8-bits and mask out other stuff
-        val blue = blue and 0x000000FF //Mask out anything not blue.
-        return -0x1000000 or red or green or blue //0xFF000000 for 100% Alpha. Bitwise OR everything together.
     }
 
 

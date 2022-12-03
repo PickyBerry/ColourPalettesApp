@@ -6,16 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recyclerviewhw.databinding.FragmentFavoritesBinding
-import com.example.recyclerviewhw.repository.Repository
 import com.example.recyclerviewhw.viewmodel.FavoritesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-//import com.example.recyclerviewhw.viewmodel.ViewModelFactory
 
+//Second screen with favorite palettes
 @AndroidEntryPoint
 class FavoritesFragment : Fragment() {
 
@@ -26,7 +24,7 @@ class FavoritesFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = FragmentFavoritesBinding.inflate(layoutInflater, container, false)
         setupViews()
@@ -35,6 +33,7 @@ class FavoritesFragment : Fragment() {
         return binding.root
     }
 
+    //Setting up recyclerview
     private fun setupViews() {
         adapter = PalettesAdapter(viewModel)
         val layoutManager = LinearLayoutManager(requireContext())
@@ -50,6 +49,7 @@ class FavoritesFragment : Fragment() {
     }
 
 
+    //Setting up livedata subscription
     private fun setupObservers() {
         viewModel.favorites.observe(viewLifecycleOwner) { list ->
             if (list.isEmpty()) {

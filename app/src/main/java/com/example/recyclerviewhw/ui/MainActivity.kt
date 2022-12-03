@@ -2,11 +2,10 @@ package com.example.recyclerviewhw.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager.widget.ViewPager
-import com.example.recyclerviewhw.R
 import com.example.recyclerviewhw.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
+//This is a single-activity app
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
